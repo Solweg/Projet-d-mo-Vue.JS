@@ -1,10 +1,9 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
-defineProps({
+const props = defineProps({
   titreBouton: { type: String, default: 'Compteur' }
 })
-
 const emettre = defineEmits(['valeurMiseAJour'])
 const compteur = ref(0)
 
@@ -12,17 +11,17 @@ function incrementer() {
   compteur.value++
   emettre('valeurMiseAJour', compteur.value)
 }
+
+// Hook pour confirmer que chaque bouton de la liste est bien monté
+onMounted(() => console.log(`${props.titreBouton} est prêt !`))
 </script>
 
 <template>
-  <div class="flex flex-col items-center p-4 border rounded-lg bg-white shadow">
-    <span class="text-gray-500 font-bold mb-2">{{ titreBouton }}</span>
-    <button 
-      @click="incrementer"
-      class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-    >
+  <div class="flex flex-col items-center p-4 border rounded-lg bg-white shadow-sm">
+    <span class="text-gray-400 text-xs font-black mb-3 uppercase">{{ titreBouton }}</span>
+    <button @click="incrementer" class="rounded-lg transition active:scale-95">
       <slot :compteur="compteur">
-        Valeur par défaut : {{ compteur }}
+        <div class="px-4 py-2 bg-blue-500 text-white rounded-lg">Valeur : {{ compteur }}</div>
       </slot>
     </button>
   </div>
